@@ -24,7 +24,7 @@ exports.getTransactionById = async (transaction_id) => {
 
 exports.getTransactions = async () => {
     try {
-        const res = await db.query("SELECT * FROM transactions");
+        const res = await db.query("SELECT id, item_id, quantity, user_id, total, status FROM transactions");
         return res.rows;
     } catch (error) {
         console.error("Error executing query", error);
