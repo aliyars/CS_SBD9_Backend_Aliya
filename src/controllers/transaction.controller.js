@@ -70,16 +70,10 @@ exports.payTransaction = async (req, res) => {
 exports.getTransactions = async (req, res) => {
     try {
         const transactions = await transactionRepository.getTransactions();
-        const detailedTransactions = await Promise.all(transactions.map(async (transaction) => {
-            const user = await userRepository.getUserById(transaction.user_id);
-            const item = await itemRepository.getItemsById(transaction.item_id);
-            return {
-                ...transaction,
-                user,
-                item
-            };
-        }));
-        return baseResponse(res, true, 200, 'Transactions found', detailedTransactions);
+        if (!transactions || transactions.length === 0) {
+            return baseResponse(res, true, 200, 'No transactions found', null);
+        }
+        return baseResponse(res, true, 200, 'Transactions retrieved successfully', transactions);
     } catch (error) {
         console.error('Error retrieving transactions:', error);
         return baseResponse(res, false, 500, 'Error retrieving transactions', error.message);
