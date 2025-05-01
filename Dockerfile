@@ -1,6 +1,21 @@
-FROM node:22.0.0
+# Use the official Node.js image
+FROM node:18
+
+# Set working directory
 WORKDIR /app
-COPY package.json /app/
-RUN npm install
-COPY . /app/
-CMD ["npm", "start"]
+
+# Copy package files first and install dependencies
+COPY package*.json ./
+RUN npm install --production
+
+# Copy the rest of the application
+COPY . .
+
+# Set environment variable for production
+ENV NODE_ENV=production
+
+# Expose the port your app runs on (default for Express is 3000)
+EXPOSE 3000
+
+# Start the app
+CMD ["node", "index.js"]
